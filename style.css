@@ -217,4 +217,62 @@ textarea{resize:vertical}
   .summary{grid-template-columns:1fr}
   .panelHead{align-items:flex-start; flex-direction:column}
 }
+/* =========================
+   Mobile fixes: no horizontal scroll (Catalog)
+   ========================= */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+* { box-sizing: border-box; }
+
+.wrap, .card, .grid2, .table, .tHead, .tBody, .tRow {
+  max-width: 100%;
+}
+
+/* Inputs/selects must be allowed to shrink */
+input, select, textarea, button {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Prevent long text from forcing width */
+.tRow > div, .tHead > div {
+  min-width: 0;
+}
+
+/* ===== Mobile tuning ===== */
+@media (max-width: 600px){
+
+  /* The Catalog tables were overflowing */
+  .table{
+    width: 100%;
+    overflow: hidden; /* we aim to fit, not scroll */
+  }
+
+  /* If your rows are grid-based (most likely) */
+  .tHead, .tRow{
+    width: 100%;
+    grid-template-columns: 1fr 84px 64px !important; /* Nume | Pret | Km */
+    column-gap: 8px;
+  }
+
+  /* Make the name column wrap nicely or ellipsis */
+  .tHead > div:first-child,
+  .tRow > div:first-child{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Smaller padding so it fits */
+  .wrap{ padding: 10px; }
+  .card{ padding: 12px; }
+
+  /* If you have a 2-column form grid in Catalog, force 1 column */
+  .grid2{
+    grid-template-columns: 1fr !important;
+  }
+}
 
