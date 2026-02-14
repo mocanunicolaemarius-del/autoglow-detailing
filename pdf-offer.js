@@ -153,13 +153,15 @@ window.generateOfferPDF = function(db, offerTotals){
 window.generateCatalogPDF = function(db){
   const logo = absUrl("assets/Logo.png");
   const priceKm = Number(db.transport?.priceKm || 0);
+  const leiNum = (n) => fmtLei(Number(n || 0)).replace(" lei", "");
+
 
   const pkgRows = db.packages.map(p=>{
     return `
       <tr>
         <td><b>${esc(p.name)}</b><div class="muted small">${esc(p.blockTitle || "")}</div></td>
         <td class="r">${Number(p.kmIncluded||0)}</td>
-        <td class="r">${(p.price).replace(" lei","")} lei</td>
+        <td class="r">${leiNum(p.price)} lei</td>
       </tr>
     `;
   }).join("");
@@ -168,7 +170,7 @@ window.generateCatalogPDF = function(db){
     return `
       <tr>
         <td>${esc(s.name)}</td>
-        <td class="r">${(s.price).replace(" lei","")} lei</td>
+        <td class="r">${leiNum(s.price)} lei</td>
       </tr>
     `;
   }).join("");
@@ -194,7 +196,7 @@ window.generateCatalogPDF = function(db){
       </header>
 
       <div class="note">
-        Preț/km extra (peste km incluși în pachet): <b>${(priceKm).replace(" lei","")} lei</b>
+        Preț/km extra (peste km incluși în pachet): <b>${leiNum(priceKm)} lei</b>
       </div>
 
       <section class="card">
