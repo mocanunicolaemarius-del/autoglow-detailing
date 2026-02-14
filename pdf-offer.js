@@ -255,13 +255,13 @@ function offerStyles(){
     border-radius:10px;
     padding:14px 18px;
     display:grid;
-    grid-template-columns: 200px 1fr 200px;
+    grid-template-columns: 240px 1fr 240px;
     align-items:center;
     gap:10px;
   }
   .logo{ display:flex; align-items:center; justify-content:center; }
   .logo img{
-  height: 84px;
+  height: 110px;
   width: auto;
   display: block;
   object-fit: contain;
