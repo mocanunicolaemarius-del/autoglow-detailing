@@ -100,12 +100,13 @@ window.generateOfferPDF = function(db, offerTotals){
       <section class="priceWrap">
         <div class="priceBox">
           <div class="priceLbl">Preț final</div>
-          <div class="priceVal">${(t.clientTotal).replace(" lei","")} lei</div>
+          <div class="priceVal">${fmtLei(toNum(t.clientTotal))}</div>
         </div>
 
         <div class="ecoBox">
           <div class="ecoLbl">Economia dvs. față de servicii separate</div>
-          <div class="ecoVal">${(economy).replace(" lei","")} lei</div>
+          <div class="ecoVal">${fmtLei(toNum(economy))}</div>
+
         </div>
       </section>
 
