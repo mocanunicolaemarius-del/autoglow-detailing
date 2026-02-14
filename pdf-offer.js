@@ -20,7 +20,7 @@ function absUrl(path){
 
 /* --------- Offer PDF --------- */
 window.generateOfferPDF = function(db, offerTotals){
-  const logo = absUrl("assets/logo.png");
+  const logo = absUrl("assets/Logo.png");
   const t = offerTotals; // {mult,pkg,extras,clientTotal,costTotal,profit}
 
   const car = db.carTypes.find(x=>x.id===document.getElementById("o_carType").value) || db.carTypes[0];
