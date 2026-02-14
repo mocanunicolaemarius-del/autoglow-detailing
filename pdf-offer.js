@@ -406,6 +406,19 @@ function esc(s){
 
 // folosim formatter-ul din app.js (global)
 const fmtLei = (n) => window.fmtLei ? window.fmtLei(n) : `${n} lei`;
+function toNum(v){
+  if (typeof v === "number") return v;
+  return Number(
+    String(v ?? "")
+      .toLowerCase()
+      .replace(/\s/g, "")
+      .replace(/lei/g, "")
+      .replace(/\./g, "")
+      .replace(/,/g, ".")
+      .replace(/[^\d.-]/g, "")
+  ) || 0;
+}
+
 
 
 function fmtRODate(d){
