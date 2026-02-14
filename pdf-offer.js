@@ -150,7 +150,7 @@ window.generateOfferPDF = function(db, offerTotals){
 
 /* --------- Catalog PDF --------- */
 window.generateCatalogPDF = function(db){
-  const logo = absUrl("assets/logo.png");
+  const logo = absUrl("assets/Logo.png");
   const priceKm = Number(db.transport?.priceKm || 0);
 
   const pkgRows = db.packages.map(p=>{
