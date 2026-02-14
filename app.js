@@ -6,7 +6,13 @@
 const STORE_KEY = "autoglow_detailing_v1";
 
 const $ = (id) => document.getElementById(id);
-const fmtLei = (n) => (Number(n || 0)).toLocaleString("ro-RO", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " lei";
+
+window.fmtLei = (n) =>
+  (Number(n || 0)).toLocaleString("ro-RO", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) + " lei";
+
 const todayISO = () => new Date().toISOString().slice(0,10);
 const monthISO = () => new Date().toISOString().slice(0,7);
 const uid = () => Math.random().toString(16).slice(2) + Date.now().toString(16);
