@@ -275,4 +275,58 @@ input, select, textarea, button {
     grid-template-columns: 1fr !important;
   }
 }
+/* ===========================
+   Mobile: stop horizontal scroll
+   =========================== */
+
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+* { box-sizing: border-box; }
+
+.wrap, main, .card {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* orice grid / row să nu împingă în afara ecranului */
+.grid2, .row, .field, .table, .tHead, .tRow, .tBody {
+  max-width: 100%;
+}
+
+/* inputs să nu depășească */
+input, select, textarea, button {
+  max-width: 100%;
+}
+
+/* dacă ai “tabel” tip grid, pe mobil îl facem mai îngust */
+@media (max-width: 600px) {
+
+  /* formularele cu 2 coloane -> 1 coloană */
+  .grid2 { grid-template-columns: 1fr !important; }
+  .row { flex-wrap: wrap; }
+
+  /* rândurile din liste (pachete/servicii/istoric) - micșorăm coloanele fixe */
+  .tHead, .tRow {
+    grid-template-columns: 1fr 92px 56px 44px !important; /* nume | preț | km | X */
+    column-gap: 10px;
+  }
+
+  /* dacă ai rânduri cu mai multe coloane (istoric), fă-le scroll intern, nu pagina */
+  .table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ca să nu iasă textul din celule */
+  .tHead > div, .tRow > div {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
 
