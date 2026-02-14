@@ -255,15 +255,16 @@ function offerStyles(){
     border-radius:10px;
     padding:14px 18px;
     display:grid;
-    grid-template-columns: 170px 1fr 170px;
+    grid-template-columns: 200px 1fr 200px;
     align-items:center;
     gap:10px;
   }
   .logo{ display:flex; align-items:center; justify-content:center; }
   .logo img{
-    height: 64px;
-    width: auto;
-    display:block;
+  height: 84px;
+  width: auto;
+  display: block;
+  object-fit: contain;
   }
   .hdrTitle{ text-align:center; color:#fff; }
   .hdrMain{ font-weight:900; font-size:26px; letter-spacing:1px; }
