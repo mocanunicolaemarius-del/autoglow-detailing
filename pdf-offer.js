@@ -100,12 +100,12 @@ window.generateOfferPDF = function(db, offerTotals){
       <section class="priceWrap">
         <div class="priceBox">
           <div class="priceLbl">Preț final</div>
-          <div class="priceVal">${fmtLei(t.clientTotal).replace(" lei","")} lei</div>
+          <div class="priceVal">${(t.clientTotal).replace(" lei","")} lei</div>
         </div>
 
         <div class="ecoBox">
           <div class="ecoLbl">Economia dvs. față de servicii separate</div>
-          <div class="ecoVal">${fmtLei(economy).replace(" lei","")} lei</div>
+          <div class="ecoVal">${(economy).replace(" lei","")} lei</div>
         </div>
       </section>
 
@@ -158,7 +158,7 @@ window.generateCatalogPDF = function(db){
       <tr>
         <td><b>${esc(p.name)}</b><div class="muted small">${esc(p.blockTitle || "")}</div></td>
         <td class="r">${Number(p.kmIncluded||0)}</td>
-        <td class="r">${fmtLei(p.price).replace(" lei","")} lei</td>
+        <td class="r">${(p.price).replace(" lei","")} lei</td>
       </tr>
     `;
   }).join("");
@@ -167,7 +167,7 @@ window.generateCatalogPDF = function(db){
     return `
       <tr>
         <td>${esc(s.name)}</td>
-        <td class="r">${fmtLei(s.price).replace(" lei","")} lei</td>
+        <td class="r">${(s.price).replace(" lei","")} lei</td>
       </tr>
     `;
   }).join("");
@@ -193,7 +193,7 @@ window.generateCatalogPDF = function(db){
       </header>
 
       <div class="note">
-        Preț/km extra (peste km incluși în pachet): <b>${fmtLei(priceKm).replace(" lei","")} lei</b>
+        Preț/km extra (peste km incluși în pachet): <b>${(priceKm).replace(" lei","")} lei</b>
       </div>
 
       <section class="card">
@@ -404,9 +404,9 @@ function esc(s){
   return String(s ?? "").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
 }
 
-function fmtLei(n){
-  return (Number(n || 0)).toLocaleString("ro-RO", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " lei";
-}
+// folosim formatter-ul din app.js (global)
+const fmtLei = (n) => window.fmtLei ? window.fmtLei(n) : `${n} lei`;
+
 
 function fmtRODate(d){
   const dd = String(d.getDate()).padStart(2,"0");
