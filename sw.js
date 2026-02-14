@@ -6,7 +6,7 @@ const ASSETS = [
   "./app.js",
   "./pdf-offer.js",
   "./manifest.webmanifest",
-  "./assets/logo.png"
+  "./assets/Logo.png"
 ];
 
 self.addEventListener("install", (event) => {
