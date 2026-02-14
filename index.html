@@ -1,1 +1,419 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AutoGlow</title>
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#062a33" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img class="brandLogo" src="assets/logo.png" alt="AutoGlow">
+      <div class="brandText">
+        <div class="brandName">AutoGlow</div>
+        <div class="brandSub">Detailing Interior • Ofertare & Catalog</div>
+      </div>
+    </div>
+
+    <nav class="tabs" role="tablist" aria-label="Navigare">
+      <button class="tab active" data-tab="offer">Ofertare</button>
+      <button class="tab" data-tab="catalog">Catalog</button>
+      <button class="tab" data-tab="history">Istoric</button>
+      <button class="tab" data-tab="settings">Setări</button>
+    </nav>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ========== OFERTARE ========== -->
+    <section class="panel active" id="tab-offer">
+      <div class="panelHead">
+        <h2>Ofertare rapidă</h2>
+        <div class="panelActions">
+          <button id="btnOfferPDF" class="btn primary">Generează PDF ofertă</button>
+          <button id="btnCatalogPDF" class="btn ghost">PDF catalog</button>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h3>Detalii comandă</h3>
+
+          <div class="field">
+            <label>Tip mașină</label>
+            <select id="o_carType"></select>
+          </div>
+
+          <div class="field">
+            <label>Nivel murdărie</label>
+            <select id="o_dirt"></select>
+          </div>
+
+          <div class="field">
+            <label>Locație / km (dus-întors)</label>
+            <input id="o_km" type="number" inputmode="decimal" placeholder="ex: 18" />
+            <div class="hint">KM sunt folosiți doar la calcul intern (cost combustibil). Pe ofertă apare doar nota cu “inclus în limita pachetului”.</div>
+          </div>
+
+          <div class="field">
+            <label>Pachet ales</label>
+            <select id="o_package"></select>
+          </div>
+
+          <div class="row">
+            <label class="check">
+              <input id="o_fixPrice" type="checkbox">
+              <span>Preț fix (ignoră calculul din servicii)</span>
+            </label>
+          </div>
+
+          <div class="grid2tight">
+            <div class="field">
+              <label>Preț fix (lei)</label>
+              <input id="o_fixPriceValue" type="number" inputmode="decimal" placeholder="ex: 630" />
+            </div>
+            <div class="field">
+              <label>Discount</label>
+              <div class="row">
+                <select id="o_discountType">
+                  <option value="none">Fără</option>
+                  <option value="percent">Procent (%)</option>
+                  <option value="fixed">Fix (lei)</option>
+                </select>
+                <input id="o_discountValue" type="number" inputmode="decimal" placeholder="ex: 10" />
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="summary">
+            <div class="sumBox">
+              <div class="sumLabel">Total client</div>
+              <div id="o_totalClient" class="sumValue">0,00 lei</div>
+            </div>
+            <div class="sumBox">
+              <div class="sumLabel">Cost (intern)</div>
+              <div id="o_totalCost" class="sumValue muted">0,00 lei</div>
+            </div>
+            <div class="sumBox">
+              <div class="sumLabel">Profit</div>
+              <div id="o_totalProfit" class="sumValue good">0,00 lei</div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row">
+            <button id="btnAddToHistory" class="btn primary full">Salvează în Istoric (luna curentă)</button>
+          </div>
+          <div class="hint">Salvează: tip mașină, pachet/servicii, total client, cost și profit.</div>
+        </div>
+
+        <div class="card">
+          <h3>Servicii extra (pe lângă pachet)</h3>
+
+          <div class="field">
+            <label>Adaugă serviciu</label>
+            <div class="row">
+              <select id="o_servicePick"></select>
+              <button id="btnAddService" class="btn primary">Adaugă</button>
+            </div>
+          </div>
+
+          <div class="table">
+            <div class="tHead">
+              <div>Serviciu</div>
+              <div class="right">Preț</div>
+              <div class="right">Cost</div>
+              <div></div>
+            </div>
+            <div id="o_servicesList" class="tBody"></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <h3>Rezumat selecție</h3>
+          <div class="pillRow">
+            <div class="pill"><b>Pachet:</b> <span id="o_packName">—</span></div>
+            <div class="pill"><b>KM incluși:</b> <span id="o_packKm">0</span></div>
+          </div>
+
+          <div class="hint">
+            Dacă ai doar servicii (fără pachet), “KM incluși” este 0 și pe ofertă apare “PERSONALIZAT”.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CATALOG ========== -->
+    <section class="panel" id="tab-catalog">
+      <div class="panelHead">
+        <h2>Catalog (Admin)</h2>
+        <div class="panelActions">
+          <button id="btnResetDemo" class="btn ghost">Reset demo</button>
+          <button id="btnExportData" class="btn ghost">Export date</button>
+          <label class="btn ghost fileBtn">
+            Import date
+            <input id="importFile" type="file" accept="application/json">
+          </label>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h3>Pachete</h3>
+
+          <div class="grid2tight">
+            <div class="field">
+              <label>Nume pachet</label>
+              <input id="p_name" placeholder="ex: VIP" />
+            </div>
+            <div class="field">
+              <label>Km incluși</label>
+              <input id="p_km" type="number" inputmode="decimal" placeholder="ex: 10" />
+            </div>
+          </div>
+
+          <div class="grid2tight">
+            <div class="field">
+              <label>Preț bază (lei)</label>
+              <input id="p_price" type="number" inputmode="decimal" placeholder="ex: 630" />
+            </div>
+            <div class="field">
+              <label>Cost intern (lei)</label>
+              <input id="p_cost" type="number" inputmode="decimal" placeholder="ex: 250" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Text “VIP — Interior ca nou” (linie titlu)</label>
+            <input id="p_blockTitle" placeholder="ex: VIP — Interior ca nou" />
+          </div>
+
+          <div class="field">
+            <label>3 puncte (câte unul pe rând)</label>
+            <textarea id="p_points" rows="4" placeholder="• Curățare profundă textile & pete&#10;• Detailing fin, timp dedicat exclusiv&#10;• Finisaj premium + odorizare inclusă"></textarea>
+          </div>
+
+          <div class="row">
+            <button id="btnAddPackage" class="btn primary full">Adaugă pachet</button>
+          </div>
+
+          <div class="table">
+            <div class="tHead">
+              <div>Pachet</div>
+              <div class="right">Preț</div>
+              <div class="right">Km</div>
+              <div></div>
+            </div>
+            <div id="packagesList" class="tBody"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Servicii</h3>
+
+          <div class="field">
+            <label>Denumire</label>
+            <input id="s_name" placeholder="ex: Curățare plafon" />
+          </div>
+
+          <div class="grid2tight">
+            <div class="field">
+              <label>Preț (lei)</label>
+              <input id="s_price" type="number" inputmode="decimal" placeholder="ex: 120" />
+            </div>
+            <div class="field">
+              <label>Cost (lei)</label>
+              <input id="s_cost" type="number" inputmode="decimal" placeholder="ex: 35" />
+            </div>
+          </div>
+
+          <div class="row">
+            <button id="btnAddServiceAdmin" class="btn primary full">Adaugă serviciu</button>
+          </div>
+
+          <div class="table">
+            <div class="tHead">
+              <div>Serviciu</div>
+              <div class="right">Preț</div>
+              <div class="right">Cost</div>
+              <div></div>
+            </div>
+            <div id="servicesList" class="tBody"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ISTORIC ========== -->
+    <section class="panel" id="tab-history">
+      <div class="panelHead">
+        <h2>Istoric</h2>
+        <div class="panelActions">
+          <button id="btnTotalsAll" class="btn primary">Total (toate lunile)</button>
+          <button id="btnClearHistory" class="btn danger ghost">Șterge istoric</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <div class="field grow">
+            <label>Luna</label>
+            <input id="h_month" type="month" />
+          </div>
+          <button id="btnViewMonth" class="btn primary">Arată luna</button>
+        </div>
+
+        <div class="summary">
+          <div class="sumBox">
+            <div class="sumLabel">Total client</div>
+            <div id="h_totalClient" class="sumValue">0,00 lei</div>
+          </div>
+          <div class="sumBox">
+            <div class="sumLabel">Cost</div>
+            <div id="h_totalCost" class="sumValue muted">0,00 lei</div>
+          </div>
+          <div class="sumBox">
+            <div class="sumLabel">Profit</div>
+            <div id="h_totalProfit" class="sumValue good">0,00 lei</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="table">
+          <div class="tHead">
+            <div>Data</div>
+            <div>Tip auto</div>
+            <div>Lucrare</div>
+            <div class="right">Client</div>
+            <div class="right">Cost</div>
+            <div class="right">Profit</div>
+            <div></div>
+          </div>
+          <div id="h_rows" class="tBody"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SETARI ========== -->
+    <section class="panel" id="tab-settings">
+      <div class="panelHead">
+        <h2>Setări</h2>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <h3>Contact (pentru PDF & catalog)</h3>
+
+          <div class="field">
+            <label>Telefon</label>
+            <input id="c_phone" placeholder="+40..." />
+          </div>
+
+          <div class="field">
+            <label>Instagram (link)</label>
+            <input id="c_ig" placeholder="https://instagram.com/..." />
+          </div>
+
+          <div class="field">
+            <label>Facebook (link)</label>
+            <input id="c_fb" placeholder="https://facebook.com/..." />
+          </div>
+
+          <div class="field">
+            <label>TikTok (link)</label>
+            <input id="c_tt" placeholder="https://tiktok.com/@..." />
+          </div>
+
+          <button id="btnSaveContact" class="btn primary full">Salvează contact</button>
+
+          <div class="hint">
+            Linkurile sunt clickabile în PDF (pe mobil/laptop).
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Multiplicatori (editabili)</h3>
+
+          <div class="field">
+            <label>Tipuri auto</label>
+            <div class="table">
+              <div class="tHead">
+                <div>Tip</div><div class="right">Multiplicator</div><div></div>
+              </div>
+              <div id="carTypesList" class="tBody"></div>
+            </div>
+            <div class="row">
+              <input id="ct_name" placeholder="ex: SUV" />
+              <input id="ct_mult" type="number" inputmode="decimal" placeholder="ex: 1.2" />
+              <button id="btnAddCarType" class="btn primary">Adaugă</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Niveluri murdărie</label>
+            <div class="table">
+              <div class="tHead">
+                <div>Nivel</div><div class="right">Multiplicator</div><div></div>
+              </div>
+              <div id="dirtList" class="tBody"></div>
+            </div>
+            <div class="row">
+              <input id="d_name" placeholder="ex: Ușor" />
+              <input id="d_mult" type="number" inputmode="decimal" placeholder="ex: 1.0" />
+              <button id="btnAddDirt" class="btn primary">Adaugă</button>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <h3>Transport (intern)</h3>
+          <div class="grid2tight">
+            <div class="field">
+              <label>Preț / km extra (lei) – pentru catalog</label>
+              <input id="t_priceKm" type="number" inputmode="decimal" placeholder="ex: 2.5" />
+            </div>
+            <div class="field">
+              <label>Consum (L/100km)</label>
+              <input id="t_consumption" type="number" inputmode="decimal" placeholder="ex: 7.0" />
+            </div>
+          </div>
+
+          <div class="grid2tight">
+            <div class="field">
+              <label>Cost combustibil (lei/L) – cât te costă pe tine</label>
+              <input id="t_fuelCost" type="number" inputmode="decimal" placeholder="ex: 7.4" />
+            </div>
+            <div class="field">
+              <label>Notă ofertă (text)</label>
+              <input id="t_note" placeholder="Deplasarea este inclusă în limita pachetului ales." />
+            </div>
+          </div>
+
+          <button id="btnSaveSettings" class="btn primary full">Salvează setări</button>
+
+          <div class="hint">
+            Datele sunt salvate local pe telefonul tău. Dacă dai linkul altcuiva, nu vede nimic din ce ai introdus tu.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+  <script src="pdf-offer.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js");
+  </script>
+</body>
+</html>
 
