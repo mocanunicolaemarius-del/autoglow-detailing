@@ -261,7 +261,7 @@ function offerStyles(){
   }
   .logo{ display:flex; align-items:center; justify-content:center; }
   .logo img{
-  height: 110px;
+  height: 125px;
   width: auto;
   display: block;
   object-fit: contain;
